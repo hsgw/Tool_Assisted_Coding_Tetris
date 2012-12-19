@@ -1,0 +1,208 @@
+var color = ['gray','#33FFFF','green','red','blue','#FF9900','#6600FF','#FFFF00'];
+
+var shape = 
+[
+	[2,[-1, 0],[ 1, 0],[ 2, 0]], // bar
+	[4,[ 0,-1],[ 1,-1],[-1, 0]], // key1
+	[4,[-1,-1],[ 0,-1],[ 1, 0]], // key2
+	[4,[-1,-1],[-1, 0],[ 1, 0]], // L1
+	[4,[ 1,-1],[-1, 0],[ 1, 0]], // L2
+	[4,[ 0,-1],[-1, 0],[ 1, 0]], // T
+	[1,[ 0,-1],[ 1,-1],[ 1, 0]]  // square
+];
+
+var mino = {
+	x : 3,
+	y : 0,
+	id : 0,
+	r : 0,
+	next:0
+};
+
+//ClearLine
+var cl = new Array(4);
+var l = 0;
+
+//フレームカウント
+var clAC=0;
+
+//TimerID
+var clAID;
+var tID;
+
+//次のミノを読み込む
+function nextMino(){
+	mino.x = 3;
+	mino.y = 0;
+	mino.id = mino.next;
+	mino.next = xors.rand(); 
+	mino.r = 0;
+}
+
+//回転した相対座標を返す
+function rotate(r){
+	var mx = [
+		shape[mino.id][1].concat(),
+		shape[mino.id][2].concat(),
+		shape[mino.id][3].concat()
+	];
+	
+	if(r == 0){
+		return mx;
+	}else{
+		for(var i=0;i<r;i++){
+			var newMx = [[],[],[]];
+			for(j=0;j<3;j++){
+				newMx[j][0] = mx[j][1]*-1;
+				newMx[j][1] = mx[j][0];
+			}
+			mx = newMx.concat();
+		}
+		return mx;
+	}
+}
+
+//board上の座標を返す
+function calcMx(offsetX,offsetY,r){
+	var mx = [[],[],[],[]];
+	var rx = rotate(r);	
+	for(var i=0;i<3;i++){
+		mx[i][0] = rx[i][0] + 1 + mino.x + offsetX;
+		mx[i][1] = rx[i][1] + 1 + mino.y + offsetY;
+	}
+	mx[3][0] = 1 + mino.x + offsetX;
+	mx[3][1] = 1 + mino.y + offsetY;
+	return mx;
+}
+
+//当たり判定
+function valid(offsetX,offsetY,r){
+	var mx = calcMx(offsetX,offsetY,r);	
+	for(var i=0;i<4;i++){
+		if((mx[i][0] < 0 || mx[i][0] > 9)
+		 || (mx[i][1] < 0 || mx[i][1] > 19)
+		 || (board[mx[i][0]][mx[i][1]] != null)){
+			return false;
+		}
+	}
+	return true;
+}
+
+//ミノの固定
+function freeze(){
+	if(!valid(0,1,mino.r)){
+		var mx = calcMx(0,0,mino.r);	
+		for(i=0;i<4;i++){
+			board[mx[i][0]][mx[i][1]] = mino.id+1;
+		}
+		if(!searchCL()){
+			nextMino();
+		}
+	}
+}
+
+//削除する行を検索
+function searchCL(){
+	cl = new Array(4);
+	l = 0;
+	
+	//削除する行を検索
+	for(var i = 1;i<21;i++){
+		for(var j=0;j<10;j++){
+			if(board[j][i] == null) break;
+			if(j==9) {
+				cl[l] = i;
+				l++;
+			}
+		}
+	}
+	if(l>0){
+		clAC = 1;
+		keyF = false;
+		clearInterval(tID);
+		clAID = setInterval(animateCL,250);
+		return true;
+	}else{
+		return false;
+	}
+}
+
+//削除する行を点滅
+function animateCL(){
+	if(clAC != 0){
+		setFS('black',1);
+		for(var i=0;i<l;i++){
+				c.fillRect(40,40+cl[i]*20,200,20);
+		}
+		clAC--;
+	}else{
+		clearInterval(clAID);
+		deleteCL();
+		keyF = true;
+	}
+}
+
+//行を削除
+function deleteCL(){	
+	for(var i=0;i<l;i++){
+		for(var j=cl[i]; j>1;j--){
+			for(var k=0;k<10;k++){
+				board[k][j] = board[k][j-1];
+			}
+		}
+		for(var k=0;k<10;k++){
+				board[k][1] = undefined;
+		}
+	}
+	tID = setInterval(tick,400);
+	nextMino();
+	draw();
+}
+
+//ハードドロップ
+function hardDrop(){
+	var dy=0;
+	while(valid(0,dy,mino.r)){
+		dy++;
+	}
+	mino.y += dy - 1;
+}
+
+function tick(){
+	mino.y++;
+	freeze();
+	draw();
+}
+
+//入力キーを処理
+function move(key){
+	switch(key){
+		case 'u': 
+			if(mino.r + 1 >= shape[mino.id][0]){
+				if(valid(0,0,0)) mino.r=0;
+			}else{
+				if(valid(0,0,mino.r+1)) mino.r++;
+			}
+			break;
+		case 'l': 
+			if(valid(-1,0,mino.r)) mino.x--;
+			break;
+		case 'r': 
+			if(valid(1,0,mino.r)) mino.x++;
+			break;
+		case 's': 
+			hardDrop();
+			break;
+		case 'd': 
+			if(valid(0,1,mino.r)) mino.y++;
+			break;
+		case 't':
+			mino.r=0;
+			mino.id++;
+			if(mino.id >= 7) mino.id = 0;
+			draw();
+			break;
+		default:
+			break;
+	}
+}
