@@ -16,8 +16,11 @@ var mino = {
 	y : 0,
 	id : 0,
 	r : 0,
-	next:0
+	next:0,
+	next2:0
 };
+
+var fTime = 0;
 
 //ClearLine
 var cl = new Array(4);
@@ -32,11 +35,28 @@ var tID;
 
 //次のミノを読み込む
 function nextMino(){
+	var mx;
+	
 	mino.x = 3;
 	mino.y = 0;
 	mino.id = mino.next;
-	mino.next = xors.rand(); 
+	mino.next = mino.next2; 
+	mino.next2 = xors.rand(); 
 	mino.r = 0;
+	
+	mx = calcMx(0,0,0);
+	
+	for(var i=0;i<4;i++){
+		if(board[mx[i][0]][mx[i][1]] != null){
+			clearInterval(tID);
+			mode = 3;
+			gameOver();
+			modeTID = setInterval(gameOver,10);
+			return false;
+		}
+	}
+	return true;
+	
 }
 
 //回転した相対座標を返す
@@ -91,13 +111,19 @@ function valid(offsetX,offsetY,r){
 //ミノの固定
 function freeze(){
 	if(!valid(0,1,mino.r)){
-		var mx = calcMx(0,0,mino.r);	
-		for(i=0;i<4;i++){
-			board[mx[i][0]][mx[i][1]] = mino.id+1;
+		if(fTime<=0){
+			var mx = calcMx(0,0,mino.r);	
+			for(i=0;i<4;i++){
+				board[mx[i][0]][mx[i][1]] = mino.id+1;
+			}
+			if(!searchCL()){
+				nextMino();
+			}
+		}else{
+			fTime--;
 		}
-		if(!searchCL()){
-			nextMino();
-		}
+	}else{
+		fTime = 3;
 	}
 }
 
@@ -139,6 +165,15 @@ function animateCL(){
 		clearInterval(clAID);
 		deleteCL();
 		keyF = true;
+		clNum = clNum - l;
+		if(clNum<=0){
+			clNum = 0;
+			clearInterval(tID);
+			mode = 3;
+			gameClear();
+			modeTID = setInterval(gameClear,10);
+		}
+		drawPoint();
 	}
 }
 
@@ -154,7 +189,7 @@ function deleteCL(){
 				board[k][1] = undefined;
 		}
 	}
-	tID = setInterval(tick,400);
+	tID = setInterval(tick,1000-350*dif);
 	nextMino();
 	draw();
 }
@@ -166,11 +201,16 @@ function hardDrop(){
 		dy++;
 	}
 	mino.y += dy - 1;
+	fTime = 0;
 }
 
+//ミノを下げる
 function tick(){
-	mino.y++;
-	freeze();
+	if(valid(0,1,mino.r)){
+		mino.y++;
+	}else{
+		freeze();
+	}
 	draw();
 }
 
@@ -205,4 +245,5 @@ function move(key){
 		default:
 			break;
 	}
+	mino.next2 = xors.rand();
 }

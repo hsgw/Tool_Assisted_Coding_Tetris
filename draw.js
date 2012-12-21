@@ -74,7 +74,7 @@ function drawNext(){
 	}
 	
 	c.save();
-	c.translate(280,80);
+	c.translate(280,100);
 	setFS('black',1);
 	c.fillRect(0,0,80,80);//next
 	c.translate(00,20);
@@ -85,8 +85,83 @@ function drawNext(){
 	c.restore();
 }
 
+function drawPoint(){
+	c.save();
+	c.translate(280,300);
+	setFS('black',1);
+	c.fillRect(0,0,80,80);
+	setFS('white',1);
+	c.font = "13px 'Press Start 2P'";
+	c.fillText("Line",3,16);
+	c.translate(0,55);
+	c.font = "40px 'Press Start 2P'";
+	c.fillText(clNum,3,16);
+	c.restore();
+}
+
 function draw(){
+		drawBoard();
+		drawNext();
+		drawPoint();
+		drawMino();
+}
+
+function op(){
 	drawBoard();
-	drawNext();
-	drawMino();
+	c.save();
+	c.translate(45,150);
+	setFS('white',1);
+	c.font = "30px 'Press Start 2P'";
+	c.fillText("TETRIS",3,16);
+	c.translate(10,50);
+	c.font = "11px 'Press Start 2P'";
+	c.fillText("press space key",3,16);
+	c.restore();
+}
+
+function dSelect(){
+	drawBoard();
+	c.save();
+	c.translate(45,150);
+	setFS('white',1);
+	c.font = "30px 'Press Start 2P'";
+	c.fillText("TETRIS",3,16);
+	c.translate(10,50);
+	c.font = "11px 'Press Start 2P'";
+	c.fillText("difficulity",3,16);
+	c.translate(70,40);
+	c.fillText("HARD",3,16);
+	c.translate(0,40);
+	c.fillText("NORMAL",3,16);
+	c.translate(0,40);
+	c.fillText("EASY",3,16);
+	c.translate(-50,-40*dif);
+	c.fillText(">>>",3,16);
+	c.restore();
+}
+
+function gameOver(){
+	c.save();
+	c.translate(80,150);
+	setFS('white',1);
+	c.font = "30px 'Press Start 2P'";
+	c.fillText("GAME",0,0);
+	c.fillText("OVER",0,40);
+	c.translate(-25,50);
+	c.font = "11px 'Press Start 2P'";
+	c.fillText("press space key",3,16);
+	c.restore();
+}
+
+function gameClear(){
+	c.save();
+	c.translate(80,150);
+	setFS('white',1);
+	c.font = "30px 'Press Start 2P'";
+	c.fillText("GAME",0,0);
+	c.fillText("CLEAR",-15,40);
+	c.translate(-25,50);
+	c.font = "11px 'Press Start 2P'";
+	c.fillText("press space key",3,16);
+	c.restore();
 }
