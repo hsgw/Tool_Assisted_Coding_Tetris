@@ -204,7 +204,7 @@ function hardDrop(){
 //ミノを下げる
 function tick(){
 	if(valid(0,1,mino.r)){
-		mino.y++;
+		//mino.y++;
 	}else{
 		freeze();
 	}
@@ -237,8 +237,14 @@ function move(key){
 			if(valid(0,1,mino.r)) mino.y++;
 			mino.next2 = xors.rand();
 			break;
+		case 't':
+			mino.r=0;
+			mino.id++;
+			if(mino.id >= 7) mino.id = 0;
+			draw();
+			break;
 		default:
-			mino.next2 = xors.rand();
+			//mino.next2 = xors.rand();
 			break;
 	}
 }

@@ -84,6 +84,27 @@ function drawNext(){
 	c.restore();
 }
 
+function drawNext2(){
+	var mb = [[],[],[],[]];
+	var mx = shape[mino.next2].concat();
+	
+	mb[1][1] = mino.next2+1;
+	for(var i=1;i<4;i++){
+		mb[mx[i][0]+1][mx[i][1]+1] = mino.next+1;
+	}
+	
+	c.save();
+	c.translate(280,200);
+	setFS('black',1);
+	c.fillRect(0,0,80,80);//next
+	c.translate(00,20);
+	c.font = "13px 'Press Start 2P'";
+	setFS('white',1);
+	c.fillText("Next",3,-4);
+	drawBlocks(4,4,mb);
+	c.restore();
+}
+
 function drawPoint(){
 	c.save();
 	c.translate(280,300);
@@ -101,6 +122,7 @@ function drawPoint(){
 function draw(){
 	drawBoard();
 	drawNext();
+	drawNext2();
 	drawPoint();
 	drawMino();
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>HTML5 TETRIS made by Arduino</title>
+<title></title>
 
 <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 
@@ -17,6 +17,13 @@ body {
 	margin:50px;
 	width:400px;
 }
+
+#data {
+  overflow:scroll;
+  width: 400px;
+  height: 100px;
+}
+
 </style>
 </head>
 
@@ -27,17 +34,10 @@ body {
 		<script type="text/javascript" src='draw.js'></script>
 		<script type="text/javascript" src='tetris.js'></script>
 	</canvas>
-	<h1>TETRIS</h1>
-	<p>
-	made by arduino<br><br>
-	Clear 40 lines!
-	</p>
-	<hr>
-	<h3>control</h3>
-	<p>
-	arrow - up : rotate<br>
-	arrow - d/l/r : move<br>
-	space : hard drop
+	<h1>Tetis for make TAS</h1>
+	<p>when delete line, must push '1'</p>
+	<div id="data"></div>
+	<p id="num"></p>
 	</p>
 </div>
 </body>

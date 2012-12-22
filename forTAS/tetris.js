@@ -11,6 +11,8 @@ var modeTID;
 
 var dif = 1;
 
+var keyNum = 0;
+
 function init() {
 	//init board
 	for(var i=0;i<10;i++){
@@ -35,6 +37,7 @@ function init() {
 	drawBoard();
 	c.fillRect(280,100,80,80);//next
 	drawPoint();
+	
 }
 
 //main
@@ -49,7 +52,9 @@ document.body.onkeydown = function( e ) {
         39: 'r',
         40: 'd',
         32: 's',
-		84: 't'
+		82: 'R',
+		84: 't',
+		49: '1'
     };
 	if(keyF){
 		switch(mode){
@@ -83,7 +88,34 @@ document.body.onkeydown = function( e ) {
 				}
 				break;
 			case 2: //game
+				var out = e.keyCode;
 				move(keys[e.keyCode]);
+				switch(keys[e.keyCode]){
+					case 'u':
+						out = 218;
+						break;
+					case 'd':
+						out = 217;
+						break;
+					case 'l':
+						out = 216;
+						break;
+					case 'r':
+						out = 215;
+						break;
+					case 's':
+						out = '\' \'';
+						break;
+					case 'R':
+						out = '\'r\'';
+						break;
+					case '1':
+						out = 0;
+						break;
+				}
+				document.getElementById("data").innerHTML +=  out;
+				document.getElementById("data").innerHTML +=  ",";
+				document.getElementById("num").innerHTML =  keyNum++;
 				freeze();
 				draw();
 				break;

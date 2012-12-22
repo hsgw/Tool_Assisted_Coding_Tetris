@@ -1,4 +1,3 @@
-//random
 //from http://d.hatena.ne.jp/nakamura001/20110521/1305997364
 
 var xors = xors || {};
@@ -10,6 +9,14 @@ xors = {
   w: 438201203,
   max:7
 };
+
+xors.seed = function(s) {
+  w = s;
+}
+
+/*xors.setMax = function(s) {
+  max = s;
+}*/
 
 xors.rand = function() {
   var t;
