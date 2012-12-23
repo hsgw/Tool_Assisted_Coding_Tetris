@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HTML5 TETRIS made by Arduino</title>
+
+<link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+
+<style type="text/css">
+body {
+	font-family: "Press Start 2P";
+	font-size:11px;
+	background-color:#000;
+	color:#FFF;
+}
+#main{
+	margin:50px;
+	width:400px;
+}
+</style>
+</head>
+
+<div id="main">
+	<canvas id="canvas" width="400px" height="480px">
+		<script type="text/javascript" src='xors.js'></script>
+		<script type="text/javascript" src='blocks.js'></script>
+		<script type="text/javascript" src='draw.js'></script>
+		<script type="text/javascript" src='tetris.js'></script>
+	</canvas>
+	<h1>TETRIS</h1>
+	<p>
+	made by arduino<br><br>
+	Clear 40 lines!
+	</p>
+	<hr>
+	<h3>control</h3>
+	<p>
+	arrow - up : rotate<br>
+	arrow - d/l/r : move<br>
+	space : hard drop
+	</p>
+</div>
+</body>
+</html>
