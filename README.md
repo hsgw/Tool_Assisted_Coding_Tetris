@@ -2,7 +2,7 @@ Tool Assisted Coding & Solving html5 tetlis
 -------------------------
 (c)2012 hsgw <http://dm9records.com>
 
-This is USB-Device firmware for auto coding(typing) and solving on arduino leonardo. (or compatible device)
+This is arduino leonardo(or compatible) sketch for auto coding(typing) and solving html5 tetris.
 
 ##!!ONLY FOR WINDWS!!
 
