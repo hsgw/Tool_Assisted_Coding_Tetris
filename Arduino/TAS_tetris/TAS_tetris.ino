@@ -1,23 +1,28 @@
 /************************************************************
  * Tool Assisted Speed Coding and Speed Run
  *   -HTML5 Tetris-
- * (c) 2012,hsgw http://dm9records.com
+ * (c) 2012, 2019, hsgw http://dm9records.com
  * 
  * Arduino Leonardo or compatible board.
- * !!!!!!!!!!Only for WINDOWS!!!!!!!!!!!
+ * !!!!!!!!!!Only for LINUX!!!!!!!!!!!
  * (But it may be easy for transplanting to other OS)
  * Required Bounce http://playground.arduino.cc//Code/Bounce
  ************************************************************/
 
-#include <avr/pgmspace.h>
-#include <Bounce.h>
+#include <Keyboard_jp.h>
+#include <Bounce2.h>
+
 #include "data.h"
 
-Bounce sw1 = Bounce(2,5);
+#define RXLED 17
+
+Bounce sw1 = Bounce(10, 5);
 
 void setup(){
-  pinMode(13,OUTPUT);
-  pinMode(2,INPUT_PULLUP);
+  pinMode(RXLED,OUTPUT);
+  digitalWrite(RXLED, 0);
+  TXLED0;
+  pinMode(10,INPUT_PULLUP);
   Keyboard.begin();
 }
 
@@ -28,9 +33,9 @@ void loop(){
 
   if(sw1State){
     //make dir
-    //digitalWrite(13,HIGH);
-    Keyboard.println("mkdir tetris");
-    Keyboard.println("cd tetris");
+    digitalWrite(RXLED,HIGH);
+    Keyboard.print("rm -r tetris\n");
+    Keyboard.print("mkdir tetris\n");
     //coding
     coding("xors.js",xors,xorsLength);
     coding("draw.js",draw,drawLength);
@@ -39,7 +44,7 @@ void loop(){
     coding("tetris.html",html,htmlLength);
     
     //open tetris.html
-    Keyboard.println("tetris.html");
+    Keyboard.print("xdg-open tetris/tetris.html\n");
     //digitalWrite(13,LOW);
     delay(3500);
     
@@ -52,43 +57,36 @@ void loop(){
       if((char)pgm_read_byte(tas+i)==0){
         delay(700);
       }else{
-        Keyboard.write((char)pgm_read_byte(tas+i));
+        Keyboard.writeRaw((char)pgm_read_byte(tas+i));
       }
       delay(20);
     }
-    //digitalWrite(13,LOW);
+    digitalWrite(RXLED,LOW);
   }
 }
 
-void coding(String fileName, const prog_char *data[], int dataLength){
+void coding(String fileName, const char *data[], int dataLength){
   int dataArrayLength = dataLength / 1000;
   int loopLength = 0;
 
   //make fileName.txt
-  Keyboard.println("type nul > " + fileName + ".txt");
-  delay(100);
-  //open file
-  Keyboard.println(fileName + ".txt");
-  delay(1000);
+  Keyboard.print("vim tetris/" + fileName + "\n");
+  delay(300);
   //inside file
+  Keyboard.print("i");
+  delay(300);
   for(int j=0;j <= dataArrayLength;j++){
     loopLength = dataLength - 1000 * j;
     if(loopLength > 1000) loopLength = 1000;
     for(int i=0;i < loopLength;i++){
       Keyboard.write((char)pgm_read_byte((data[j])+i));
-      delay(5);
+      delay(3);
     }
   }
   delay(100);
   //save and close file
-  Keyboard.press(KEY_LEFT_CTRL);
-  Keyboard.press('e');
-  delay(100);
-  Keyboard.releaseAll();
-  delay(1000);
-  //rename
-  Keyboard.println("rename " + fileName + ".txt " + fileName);
+  Keyboard.write(KEY_ESC);
+  delay(10);
+  Keyboard.print(":wq\n");
   delay(500);
 }
-
-
